@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# NFT Game DApp
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A decentralized application (DApp) that allows users to mint and evolve NFTs on the Sepolia testnet.
 
-## Available Scripts
+## Features
+- Connect wallet using Web3Modal
+- Mint basic NFTs using signature-based verification
+- Evolve NFTs by combining multiple basic NFTs
+- View NFT balances for both basic and evolved NFTs
 
-In the project directory, you can run:
+## NFT Minting Flow Sequence Diagram
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend
+    participant Backend
+    participant Smart Contract
+    participant Blockchain
+    
+    User->>Frontend: Connect Wallet
+    Frontend->>User: Request Wallet Connection
+    User->>Frontend: Approve Connection
+    
+    User->>Frontend: Click Mint NFT
+    Frontend->>Backend: Request Signature (userAddress)
+    Backend->>Backend: Generate Signature & Index
+    Backend->>Frontend: Return Signature & Index
+    
+    Frontend->>Smart Contract: Call claimNFT(index, signature)
+    Smart Contract->>Smart Contract: Verify Signature
+    Smart Contract->>Smart Contract: Check if Signature Used
+    Smart Contract->>Blockchain: Mint NFT
+    Blockchain->>Smart Contract: Confirm Transaction
+    Smart Contract->>Frontend: Return Transaction Result
+    Frontend->>User: Show Success/Error Toast
+    Frontend->>Smart Contract: Get Updated Balances
+    Smart Contract->>Frontend: Return NFT Balances
+    Frontend->>User: Display Updated NFT Counts
+```
 
-### `yarn start`
+## Technical Stack
+- Frontend: React.js with Tailwind CSS
+- Web3: ethers.js, Web3Modal
+- Smart Contract: ERC-1155
+- Network: Sepolia Testnet
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Smart Contract Functions
+- claimNFT(index, signature): Mints a new basic NFT
+- evolveNFTs(): Combines 2 basic NFTs into 1 evolved NFT
+- getUserBalances(address): Returns balance of basic and evolved NFTs
+ 
+## API Endpoints
+- POST /api/v1/generate-signature: Generates signature for NFT minting
+    - Request body: { userAddress: string }
+    - Response: { signature: string, index: number }
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Security Features
+- Signature-based minting verification
+- Used signature tracking to prevent replay attacks
+- Web3Modal for secure wallet connections
 
-### `yarn test`
+## Github repos
+- FE: https://github.com/datphamcode295/snft-fe
+- BE: https://github.com/datphamcode295/snft-be
+- Smart contract: https://github.com/datphamcode295/EvolvingERC1155
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Demo
+You can view demo at https://snft-game.netlify.app/
